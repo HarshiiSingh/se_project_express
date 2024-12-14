@@ -15,6 +15,13 @@ mongoose
   });
 
 app.use(express.json())
+
+app.use((req, res, next) => {
+  req.user = {
+    _id: '675de1a8d5bcfa9bc3400fdf'// paste the _id of the test user created in the previous step
+  };
+  next();
+});
 app.use("/", mainRouter);
 
 app.listen(PORT, () => {
