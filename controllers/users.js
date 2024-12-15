@@ -10,7 +10,7 @@ const getUsers = (req, res) => {
     .then((users) => res.status(200).send(users))
     .catch((err) => {
       console.error(err);
-      return res.status(500).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 
@@ -43,7 +43,7 @@ const getUser = (req, res) => {
       if (err.name === "CastError") {
         return res.status(INVALID_REQUEST).send({ message: err.message });
       }
-      return res.status(500).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 

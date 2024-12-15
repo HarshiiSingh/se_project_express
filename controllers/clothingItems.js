@@ -13,8 +13,8 @@ const getItems = (req, res) => {
     .catch((err) => {
       console.error(err);
       return res
-        .status(500)
-        .send({ message: "Requested resource not foundss" });
+        .status(DEFAULT_ERROR)
+        .send({ message: err.message });
     });
 };
 
@@ -50,7 +50,7 @@ const deleteItem = (req, res) => {
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: "Requested resource not foundss" });
+        .send({ message: err.message });
     });
 };
 
