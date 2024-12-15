@@ -1,4 +1,9 @@
 const ClothingItems = require("../models/clothingItem");
+const {
+  DEFAULT_ERROR,
+  REQUEST_NOT_FOUND,
+  INVALID_REQUEST,
+} = require("../utils/errors");
 
 const getItems = (req, res) => {
   ClothingItems.find({})
@@ -14,8 +19,6 @@ const getItems = (req, res) => {
 };
 
 const createItem = (req, res) => {
-  // console.log(req)
-  // console.log(req.body)
   const { name, weather, imageUrl } = req.body;
   console.log(req.user._id);
 
@@ -25,21 +28,28 @@ const createItem = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res
-        .status(500)
-        .send({ message: "Requested resource not foundss" });
+      if (err.name === "ValidationError") {
+        return res.status(INVALID_REQUEST).send({ message: err.message });
+      }
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  console.log(itemId);
   ClothingItems.findByIdAndDelete(itemId)
+    .orFail()
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
+      if (err.name === "CastError") {
+        return res.status(INVALID_REQUEST).send({ message: err.message });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
+      }
       return res
-        .status(500)
+        .status(DEFAULT_ERROR)
         .send({ message: "Requested resource not foundss" });
     });
 };
@@ -54,9 +64,13 @@ const likeItem = (req, res) => {
     .then((item) => res.status(200).send({ data: item }))
     .catch((err) => {
       console.error(err);
-      return res
-        .status(500)
-        .send({ message: "Requested resource not foundss" });
+      if (err.name === "CastError") {
+        return res.status(INVALID_REQUEST).send({ message: err.message });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
+      }
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 
@@ -67,13 +81,19 @@ const dislikeItem = (req, res) => {
     { new: true }
   )
     .orFail()
-    .then((item) => res.status(200).send({data:item}))
+    .then((item) => res.status(200).send({ data: item }))
     .catch((err) => {
       console.error(err);
-      return res
-        .status(500)
-        .send({ message: "Requested resource not foundss" });
+      if (err.name === "CastError") {
+        return res.status(INVALID_REQUEST).send({ message: err.message });
+      }
+      if (err.name === "DocumentNotFoundError") {
+        return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
+      }
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 
-module.exports = { getItems, createItem, deleteItem, likeItem, dislikeItem};
+module.exports = { getItems, createItem, deleteItem, likeItem, dislikeItem };
+
+// Validation Error, CastError, DocumentNotFoundError
