@@ -14,7 +14,7 @@ const getItems = (req, res) => {
       console.error(err);
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: err.message });
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -31,7 +31,7 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(INVALID_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -50,7 +50,7 @@ const deleteItem = (req, res) => {
       }
       return res
         .status(DEFAULT_ERROR)
-        .send({ message: err.message });
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -70,7 +70,7 @@ const likeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -90,7 +90,7 @@ const dislikeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
     });
 };
 
