@@ -8,7 +8,7 @@ const {createUser, login} = require("../controllers/users");
 
 const auth = require('../middlewares/auth');
 
-//No Protect Route
+// No Protect Route
 router.post('/signin', login);
 router.post('/signup', createUser);
 router.use("/items", clothingItemRouter);

@@ -62,9 +62,9 @@ const createUser = (req, res) => {
 };
 
 const getCurrentUser = (req, res) => {
-  const { userId } = req.user._id;
-  console.log(req.user._id);
-  User.findById(req.user._id)
+  const userId = req.user._id;
+  console.log(userId)
+  User.findById(userId)
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
@@ -100,7 +100,7 @@ const login = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(INVALID_REQUEST).send({ message: "Email not Found" });
       }
-      res.status(UNAUTHORIZED).send({ message: err.message });
+      return res.status(UNAUTHORIZED).send({ message: err.message });
       // ADD MORE ERROR HANDLING
     });
 };
@@ -121,7 +121,7 @@ const updateUser = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(REQUEST_NOT_FOUND).send({ message: "Bad request" });
       }
-      return res.status(DEFAULT).send({ err: err.message });
+      return res.status(DEFAULT_ERROR).send({ err: err.message });
     });
 };
 module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
