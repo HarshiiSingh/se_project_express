@@ -63,7 +63,7 @@ const createUser = (req, res) => {
 
 const getCurrentUser = (req, res) => {
   const userId = req.user._id;
-  console.log(userId)
+  console.log(userId);
   User.findById(userId)
     .orFail()
     .then((user) => res.status(200).send(user))
@@ -98,10 +98,10 @@ const login = (req, res) => {
     .catch((err) => {
       console.log(err);
       if (err.name === "ValidationError") {
+        // This should no longer be needed? Invalid emails should be checked by Auth or finduserbycredentials
         return res.status(INVALID_REQUEST).send({ message: "Email not Found" });
       }
       return res.status(UNAUTHORIZED).send({ message: err.message });
-      // ADD MORE ERROR HANDLING
     });
 };
 
