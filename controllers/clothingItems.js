@@ -3,6 +3,7 @@ const {
   DEFAULT_ERROR,
   REQUEST_NOT_FOUND,
   INVALID_REQUEST,
+  FORBIDDEN,
 } = require("../utils/errors");
 
 const getItems = (req, res) => {
@@ -24,6 +25,7 @@ const createItem = (req, res) => {
 
   ClothingItems.create({ name, weather, imageUrl, owner: req.user._id })
     .then((item) => {
+      console.log(item);
       res.status(201).send(item);
     })
     .catch((err) => {
@@ -31,14 +33,24 @@ const createItem = (req, res) => {
       if (err.name === "ValidationError") {
         return res.status(INVALID_REQUEST).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
 const deleteItem = (req, res) => {
   const { itemId } = req.params;
-  ClothingItems.findByIdAndDelete(itemId)
+  ClothingItems.findById(itemId)
     .orFail()
+    .then((item) => {
+      if (req.user._id !== item.owner.toString()) {
+        return res
+          .status(FORBIDDEN)
+          .send({ message: "You may not delete another users item" });
+      }
+      return ClothingItems.findByIdAndDelete(itemId);
+    })
     .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
@@ -70,7 +82,9 @@ const likeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
@@ -90,7 +104,9 @@ const dislikeItem = (req, res) => {
       if (err.name === "DocumentNotFoundError") {
         return res.status(REQUEST_NOT_FOUND).send({ message: err.message });
       }
-      return res.status(DEFAULT_ERROR).send({ message: "An error has occurred on the server" });
+      return res
+        .status(DEFAULT_ERROR)
+        .send({ message: "An error has occurred on the server" });
     });
 };
 
