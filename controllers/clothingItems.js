@@ -49,9 +49,9 @@ const deleteItem = (req, res) => {
           .status(FORBIDDEN)
           .send({ message: "You may not delete another users item" });
       }
-      return ClothingItems.findByIdAndDelete(itemId);
+      return ClothingItems.findByIdAndDelete(itemId)
+      .then((deletedItem) => res.status(200).send(deletedItem));
     })
-    .then((item) => res.status(200).send(item))
     .catch((err) => {
       console.error(err);
       if (err.name === "CastError") {

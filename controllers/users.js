@@ -12,17 +12,6 @@ const {
 
 const { JWT_SECRET } = require("../utils/config");
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch((err) => {
-      console.error(err);
-      return res
-        .status(DEFAULT_ERROR)
-        .send({ message: "An error has occurred on the server" });
-    });
-};
-
 const createUser = (req, res) => {
   const { name, avatar, email, password } = req.body;
   console.log(req.body);
@@ -97,11 +86,12 @@ const login = (req, res) => {
     })
     .catch((err) => {
       console.log(err);
-      if (err.name === "ValidationError") {
-        // This should no longer be needed? Invalid emails should be checked by Auth or finduserbycredentials
-        return res.status(INVALID_REQUEST).send({ message: "Email not Found" });
+      if (err.message === "Incorrect email or password") {
+        return res
+          .status(UNAUTHORIZED)
+          .send({ message: "Incorrect information" });
       }
-      return res.status(UNAUTHORIZED).send({ message: err.message });
+      return res.status(DEFAULT_ERROR).send({ message: err.message });
     });
 };
 
@@ -124,4 +114,4 @@ const updateUser = (req, res) => {
       return res.status(DEFAULT_ERROR).send({ err: err.message });
     });
 };
-module.exports = { getUsers, createUser, getCurrentUser, login, updateUser };
+module.exports = { createUser, getCurrentUser, login, updateUser };
