@@ -9,3 +9,6 @@ Express.js was used as the framework for building the API and managing routes. T
 
 `npm run dev` — to launch the server with the hot reload feature
 
+## Visit the Homepage
+https://wtwr.networkguru.com
+
