@@ -17,7 +17,7 @@ const ConflictError = require("../utils/errors/ConflictError");
 
 const { JWT_SECRET } = require("../utils/config");
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, avatar, email, password } = req.body;
   console.log(req.body);
 
@@ -60,7 +60,7 @@ const createUser = (req, res) => {
   });
 };
 
-const getCurrentUser = (req, res) => {
+const getCurrentUser = (req, res, next) => {
   const userId = req.user._id;
   console.log(userId);
   User.findById(userId)
@@ -83,7 +83,7 @@ const getCurrentUser = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   if (!email || !password) {
     // return res
@@ -111,7 +111,7 @@ const login = (req, res) => {
     });
 };
 
-const updateUser = (req, res) => {
+const updateUser = (req, res, next) => {
   const { name, avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
