@@ -3,7 +3,7 @@ const validator = require('validator');
 
 
 const validateUrl = (value, helpers) => {
-  if  (validator.isUrl(value)) {
+  if  (validator.isURL(value)) {
     return value;
   }
   return helpers.error("string.uri");
