@@ -1,8 +1,10 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
 require("dotenv").config();
 const { errors } = require("celebrate");
+const limiter = require("./middlewares/rateLimit")
 const mainRouter = require("./routes/index");
 const errorHandler = require("./middlewares/error-handler");
 const { requestLogger, errorLogger } = require("./middlewares/logger");
@@ -22,7 +24,8 @@ mongoose
 app.use(express.json());
 app.use(cors());
 app.use(requestLogger);
-
+app.use(helmet());
+app.use(limiter);
 app.get("/crash-test", () => {
   setTimeout(() => {
     throw new Error("Server will crash now");
